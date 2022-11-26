@@ -1,34 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  StatusBar,
-  SafeAreaView,
   Alert,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { ROUTER } from "../constants/route";
-import { getCurrentUser, go } from "../utils/common";
-import { signOut } from "firebase/auth";
+
+import { updateProfile } from "firebase/auth";
 import { auth } from "../config/firebase";
+import { go } from "../utils/common";
 import LoadingCircular from "../components/common/Loading";
-export default function Home({ navigation }) {
-  const [user, setUser] = useState();
+
+export default function UpdateInfo({ navigation }) {
+  const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const user = getCurrentUser();
-    if (!user) return go(navigation, ROUTER.LOGIN);
-    setUser(user);
-  }, []);
-
-  const handleSignOut = () => {
+  const onHandleUpdateInfo = () => {
     setIsLoading(true);
-    return signOut(auth)
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+      phoneNumber,
+    })
       .then(() => {
         go(navigation, ROUTER.LOGIN);
-        Alert.alert("LOG OUT SUCCESSFULLY");
         setIsLoading(false);
       })
       .catch((error) => {
@@ -39,38 +39,36 @@ export default function Home({ navigation }) {
       });
   };
 
-  console.log(user);
-
   return (
     <View style={styles.container}>
       {isLoading && <LoadingCircular visible={isLoading} />}
       <View style={styles.whiteSheet} />
       <SafeAreaView style={styles.form}>
-        <Text style={styles.title}>
-          WELCOME {user?.displayName || ""} TO MY GAME
-        </Text>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => go(navigation, ROUTER.PLAY)}
-        >
+        <Text style={styles.title}>ENTER YOUR INFORMATION</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Bin Chilling..."
+          autoCapitalize="none"
+          keyboardType="email-address"
+          textContentType="emailAddress"
+          value={name}
+          onChangeText={(text) => setName(text)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="090xxxxx73"
+          autoCapitalize="none"
+          autoCorrect={false}
+          secureTextEntry={true}
+          textContentType="text"
+          value={phoneNumber}
+          maxLength={11}
+          onChangeText={(text) => setPhoneNumber(text)}
+        />
+        <TouchableOpacity style={styles.button} onPress={onHandleUpdateInfo}>
           <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
-            Chơi
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => {}}>
-          <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
-            Gét Go
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => {}}>
-          <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
-            Bảng Điểm
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleSignOut}>
-          <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
-            Log Out
+            {" "}
+            CONFIRM
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
@@ -78,7 +76,6 @@ export default function Home({ navigation }) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -90,6 +87,7 @@ const styles = StyleSheet.create({
     color: "orange",
     alignSelf: "center",
     paddingBottom: 24,
+    textAlign: "center",
   },
   input: {
     backgroundColor: "#F6F7FB",
