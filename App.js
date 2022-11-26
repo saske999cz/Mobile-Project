@@ -1,10 +1,12 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StyleSheet } from "react-native";
+import { ROUTER } from "./constants/route";
 import Home from "./screens/Home";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
-import { ROUTER } from "./constants/route";
+import UpdateInfo from "./screens/UpdateInfo";
+import Play from "./screens/Play";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -12,12 +14,10 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name={ROUTER.HOME} component={Home} />
-      </Stack.Navigator>
-      <Stack.Navigator>
         <Stack.Screen name={ROUTER.LOGIN} component={Login} />
-      </Stack.Navigator>
-      <Stack.Navigator>
         <Stack.Screen name={ROUTER.REGISTER} component={Register} />
+        <Stack.Screen name={ROUTER.UPDATE_INFO} component={UpdateInfo} />
+        <Stack.Screen name={ROUTER.PLAY} component={Play} />
       </Stack.Navigator>
     </NavigationContainer>
   );

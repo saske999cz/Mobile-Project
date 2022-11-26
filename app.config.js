@@ -1,4 +1,5 @@
 import "dotenv";
+
 export default {
   expo: {
     name: "mobile",
@@ -29,6 +30,7 @@ export default {
       favicon: "./assets/favicon.png",
     },
     extra: {
+      fact: "kittens are cool",
       apiKey: process.env.API_KEY,
       authDomain: process.env.AUTH_DOMAIN,
       projectId: process.env.PROJECT_ID,
