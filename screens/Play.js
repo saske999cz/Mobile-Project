@@ -26,8 +26,6 @@ export default function Play({ navigation }) {
     fetchData();
   }, []);
 
-  console.log(listAnswer);
-
   return (
     <View style={styles.container}>
       {isLoading && <LoadingCircular visible={isLoading} />}

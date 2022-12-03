@@ -1,35 +1,32 @@
-import React, { useEffect, useState } from "react";
+import { signOut } from "firebase/auth";
+import { useEffect, useState } from "react";
 import {
+  Alert,
+  SafeAreaView,
+  StatusBar,
   StyleSheet,
-  View,
   Text,
   TouchableOpacity,
-  StatusBar,
-  SafeAreaView,
-  Alert,
+  View,
 } from "react-native";
-import { ROUTER } from "../constants/route";
-import { getCurrentUser, go } from "../utils/common";
-import { signOut } from "firebase/auth";
-import { auth } from "../config/firebase";
+import { useSelector, useDispatch } from "react-redux";
 import LoadingCircular from "../components/common/Loading";
-export default function Home({ navigation }) {
-  const [user, setUser] = useState();
+import { auth } from "../config/firebase";
+import { ROUTER } from "../constants/route";
+import { logout } from "../store/userStore";
+import { go } from "../utils/common";
+export default function Home(props) {
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const user = getCurrentUser();
-    if (!user) return go(navigation, ROUTER.LOGIN);
-    setUser(user);
-  }, []);
-
+  const { user } = useSelector((rootState) => rootState.user);
+  const dispatch = useDispatch();
   const handleSignOut = () => {
     setIsLoading(true);
     return signOut(auth)
       .then(() => {
-        go(navigation, ROUTER.LOGIN);
+        go(props.navigation, ROUTER.LOGIN);
         Alert.alert("LOG OUT SUCCESSFULLY");
         setIsLoading(false);
+        dispatch(logout());
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -39,20 +36,22 @@ export default function Home({ navigation }) {
       });
   };
 
-  console.log(user);
+  useEffect(() => {
+    if (!user || (user && Object.keys(user) === 0)) {
+      go(props.navigation, ROUTER.LOGIN);
+    }
+  }, []);
 
   return (
     <View style={styles.container}>
       {isLoading && <LoadingCircular visible={isLoading} />}
       <View style={styles.whiteSheet} />
       <SafeAreaView style={styles.form}>
-        <Text style={styles.title}>
-          WELCOME {user?.displayName || ""} TO MY GAME
-        </Text>
+        <Text style={styles.title}>WELCOME TO MY GAME</Text>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => go(navigation, ROUTER.PLAY)}
+          onPress={() => go(props.navigation, ROUTER.PLAY)}
         >
           <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
             Chơi
