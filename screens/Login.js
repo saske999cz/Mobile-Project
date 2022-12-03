@@ -1,5 +1,5 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   SafeAreaView,
@@ -10,12 +10,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ROUTER } from "../constants/route";
-import { auth } from "../config/firebase";
-import { go } from "../utils/common";
 import LoadingCircular from "../components/common/Loading";
+import { auth } from "../config/firebase";
+import { ROUTER } from "../constants/route";
+import { go } from "../utils/common";
+import { useDispatch } from "react-redux";
+import { login } from "../store/userStore";
 
 export default function Login(props) {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -24,10 +27,20 @@ export default function Login(props) {
     if (email !== "" && password !== "") {
       setIsLoading(true);
       signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
+        .then((res) => {
           Alert.alert("Login success");
-          go(props.navigation, ROUTER.HOME);
+          dispatch(
+            login({
+              user: {
+                email: res.user.email,
+                phoneNumber: res.user.phoneNumber,
+                photoURL: res.user.photoURL,
+                displayName: res.user.displayName,
+              },
+            })
+          );
           setIsLoading(false);
+          go(props.navigation, ROUTER.HOME);
         })
         .catch((err) => {
           Alert.alert("Login error", err.message);
@@ -35,6 +48,11 @@ export default function Login(props) {
         });
     }
   };
+
+  // useEffect(() => {
+  //   if()
+  //   // go(props.navigation, ROUTER.HOME);
+  // }, [props]);
 
   return (
     <View style={styles.container}>
