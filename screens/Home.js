@@ -16,6 +16,8 @@ import { auth } from "../config/firebase";
 import { ROUTER } from "../constants/route";
 import { logout } from "../store/userStore";
 import { go } from "../utils/common";
+import homeBg from "../assets/homeBg.png";
+
 export default function Home(props) {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useSelector((rootState) => rootState.user);
@@ -48,7 +50,7 @@ export default function Home(props) {
       {isLoading && <LoadingCircular visible={isLoading} />}
       <View style={styles.whiteSheet} />
       <SafeAreaView style={styles.form}>
-      <Image source={require('../Img/backgnd.png')} style={styles.MainIMG} />
+        <Image source={homeBg} style={styles.MainIMG} />
 
         <TouchableOpacity
           style={styles.button}
