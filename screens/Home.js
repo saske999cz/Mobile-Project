@@ -66,7 +66,11 @@ export default function Home(props) {
             Bảng Điểm
           </Text>
         </TouchableOpacity>
-        <Button onPress={handleSignOut} text="Đăng Xuất"></Button>
+        <TouchableOpacity style={styles.button} onPress={handleSignOut}>
+        <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
+            Đăng Xuất
+          </Text>
+        </TouchableOpacity>
       </SafeAreaView>
       <StatusBar barStyle="light-content" />
     </View>
