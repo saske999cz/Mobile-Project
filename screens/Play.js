@@ -5,12 +5,17 @@ import {
   Alert,
   Dimensions,
   Image,
+  Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { useSelector } from "react-redux";
 import imagePlayScreenBg from "../assets/haha.jpg";
+import help1 from "../assets/help1.png";
+import help2 from "../assets/help2.png";
+import help3 from "../assets/help3.png";
 import ButtonAnswer from "../components/common/ButtonAnswer";
 import LoadingCircular from "../components/common/Loading";
 import SideBar from "../components/common/SideBar";
@@ -18,17 +23,13 @@ import PlaySidebarContent from "../components/molecules/PlaySidebarContent";
 import { db } from "../config/firebase";
 import { moneyByNumberQuestion } from "../constants/data";
 import { ROUTER } from "../constants/route";
-import { go, randomQuestion, formatVND } from "../utils/common";
-import { useSelector } from "react-redux";
+import { formatVND, go, randomQuestion } from "../utils/common";
 
 const defaultItemAnswer = {
   index: -1,
   color: "",
   type: "",
 };
-import help1 from "../assets/help1.png";
-import help2 from "../assets/help2.png";
-import help3 from "../assets/help3.png";
 
 export default function Play({ navigation }) {
   const [count, setCount] = useState(60);
@@ -43,15 +44,6 @@ export default function Play({ navigation }) {
     level: 1,
     number: 1,
   });
-
-  useEffect(() => {
-    if (isStartCount) {
-      const secondsLeft = setInterval(() => {
-        setCount((c) => c - 1);
-      }, 1000);
-      return () => clearInterval(secondsLeft);
-    }
-  }, [isStartCount]);
 
   function answerIndex(index) {
     if (index == 1) return "A";
@@ -69,29 +61,27 @@ export default function Play({ navigation }) {
         numberQuestion: score.number,
       });
 
-      if (type === "win") {
-        Alert.alert(
-          type === "win" ? "Chúc mừng bạnn" : "Bạn thua rùiii",
-          type === "win"
-            ? `Bạn đã kết thúc lượt chơi của mình với tất cả các câu hỏi , số tiền thưởng bạn đạt được ${formatVND(
-                getMoneyByNumberQuestion(score.number)
-              )} cho lần chơi này. Congratulations`
-            : `Bạn đã kết thúc lượt chơi của mình tại câu hỏi số ${
-                score.number
-              }, và số tiền thưởng bạn đạt được là ${formatVND(
-                getMoneyByNumberQuestion(score.number)
-              )} , chúc bạn may mắn trong lượt chơi kế tiếp.`,
+      Alert.alert(
+        type === "win" ? "Chúc mừng bạnn" : "Bạn thua rùiii",
+        type === "win"
+          ? `Bạn đã kết thúc lượt chơi của mình với tất cả các câu hỏi , số tiền thưởng bạn đạt được ${formatVND(
+              getMoneyByNumberQuestion(score.number)
+            )} cho lần chơi này. Congratulations`
+          : `Bạn đã kết thúc lượt chơi của mình tại câu hỏi số ${
+              score.number
+            }, và số tiền thưởng bạn đạt được là ${formatVND(
+              getMoneyByNumberQuestion(score.number)
+            )} , chúc bạn may mắn trong lượt chơi kế tiếp.`,
 
-          [
-            {
-              text: "Okê",
-              onPress: () => go(navigation, ROUTER.HOME),
-            },
-          ],
-          { cancelable: false }
-          //clicking out side of alert will not cancel
-        );
-      }
+        [
+          {
+            text: "Okê",
+            onPress: () => go(navigation, ROUTER.HOME),
+          },
+        ],
+        { cancelable: false }
+        //clicking out side of alert will not cancel
+      );
       setTimeout(() => go(navigation, ROUTER.HOME), 4000);
     } catch (error) {
       console.log({ error });
@@ -148,6 +138,46 @@ export default function Play({ navigation }) {
     }
   };
 
+  const handleGetHalfResult = () => {
+    setIsLoading(true);
+    const listIndexNoDuplicate = [];
+    const copyCurrentQuestion = JSON.parse(JSON.stringify(currentQuestion));
+    do {
+      let randomIndex = Math.floor(Math.random() * 3);
+      console.log(randomIndex);
+      if (!listIndexNoDuplicate.includes(randomIndex)) {
+        if (!copyCurrentQuestion.answers[randomIndex].isCorrect) {
+          listIndexNoDuplicate.push(randomIndex);
+          copyCurrentQuestion.answers[randomIndex].isHide = true;
+        }
+      }
+    } while (listIndexNoDuplicate.length < 2);
+    setCurrentQuestion(copyCurrentQuestion);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+  };
+
+  const handleCallTelephone = () => {
+    Alert.prompt(
+      "Nhập số điện thoại",
+      "Nhập số điện thoại người thân của bạn",
+      (value) => {
+        Linking.openURL(`tel:${value}`);
+      },
+      "plain-text"
+    );
+  };
+
+  useEffect(() => {
+    if (isStartCount) {
+      const secondsLeft = setInterval(() => {
+        setCount((c) => c - 1);
+      }, 1000);
+      return () => clearInterval(secondsLeft);
+    }
+  }, [isStartCount]);
+
   useEffect(() => {
     if (count === 0) onHandleGameProcess("lose");
   }, [count]);
@@ -155,7 +185,7 @@ export default function Play({ navigation }) {
   useEffect(() => {
     if (!data || data.length === 0) return;
     const randomItem = randomQuestion(data, getLevel(score.number));
-    setCurrentQuestion(randomItem);
+    setCurrentQuestion({ ...randomItem, isHide: false });
   }, [data]);
 
   useEffect(() => {
@@ -219,10 +249,10 @@ export default function Play({ navigation }) {
         <TouchableOpacity>
           <Image source={help1} style={styles.HelpIMG} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleGetHalfResult}>
           <Image source={help2} style={styles.HelpIMGv1} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleCallTelephone}>
           <Image source={help3} style={styles.HelpIMGv2} />
         </TouchableOpacity>
       </View>
@@ -273,6 +303,7 @@ export default function Play({ navigation }) {
                     currentItemAnswer.index === index
                       ? currentItemAnswer.color
                       : "black",
+                  opacity: item?.isHide ? 0 : 1,
                 }}
                 onPress={() => {
                   handleAnswerQuestion(item, index, getLevel(score.number));
