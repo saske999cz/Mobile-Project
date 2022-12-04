@@ -8,4 +8,11 @@ const go = (navigation, path, option = {}) => {
   navigation.navigate(path, { ...option });
 };
 
-export { convertNumber, go };
+const formatVND = (money) => {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(money);
+};
+
+export { convertNumber, go, formatVND };
