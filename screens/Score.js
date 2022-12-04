@@ -1,5 +1,5 @@
 import { SimpleLineIcons } from "@expo/vector-icons";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -17,6 +17,9 @@ import { db } from "../config/firebase";
 import imagePlayScreenBg from "../assets/haha.jpg";
 import { useTimer } from "../hooks/count-down";
 import PlaySidebarContent from "../components/molecules/PlaySidebarContent";
+import { useSelector } from "react-redux";
+import { formatVND } from "../utils/common";
+import haha from "../assets/haha.jpg";
 
 export default function Play({ navigation }) {
   const [listAnswer, setListAnswer] = useState([]);
@@ -24,18 +27,28 @@ export default function Play({ navigation }) {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [isStartCount, setIsStartCount] = useState(true);
   const [isCorrect, setIsCorrect] = useState(false);
-
-
+  const { user } = useSelector((rootState) => rootState.user);
+  const [userBoard, setUserBoard] = useState({});
+  
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const querySnapshot = await getDocs(collection(db, "questions"));
+        const q = query(collection(db, "scores"), where("email", "==", user.email));
+        const querySnapshot = await getDocs(q);
         if (querySnapshot) {
           const result = [];
-          querySnapshot.forEach((doc) => result.push(doc.data()));
-          setListAnswer(result);
+          let count = 0;
+          let item ={};
+          querySnapshot.forEach((doc) => {
+            if(doc.data().numberQuestion > count) {
+                count=doc.data().numberQuestion; 
+                item =doc.data()}});
+          setUserBoard(item);
+          console.log(item);
+          
+          
         }
       } catch (e) {
         console.error("Error adding document: ", e);
@@ -48,21 +61,19 @@ export default function Play({ navigation }) {
 
   return (
     <View style ={styles.container}>
+    <Image source={haha} style={styles.backgroundImage} />
         <Text style={styles.title}>
             THỐNG KÊ
         </Text>
         <View style={styles.infocontainer}> 
         <Text style={styles.scoretext}>
-            User:
+            Tên:  {user.email}
         </Text>
         <Text style={styles.scoretext}>
-            Max Score:
+            Số tiền nhiều nhất:  {formatVND(userBoard.money)} 
         </Text>
         <Text style={styles.scoretext}>
-            Tổng số câu đã trả lời:
-        </Text>
-        <Text style={styles.scoretext}>
-            Số câu trả lời đúng:
+            Số câu trả lời đúng:  {userBoard.numberQuestion}
         </Text>
         </View>
         
@@ -79,7 +90,7 @@ export default function Play({ navigation }) {
   },
   infocontainer:{
     marginTop: 10,
-    backgroundColor: "midnightblue",
+    backgroundColor: "black",
     alignItems:'flex-start',
     display:'flex',
     flexDirection:'column',
@@ -88,6 +99,7 @@ export default function Play({ navigation }) {
     borderRadius:40,
     borderWidth:2,
     borderColor:"#74a2d5",
+    zIndex:100,
   },
   scoretext: {
     fontSize:20,
@@ -102,7 +114,20 @@ title:{
     fontWeight:'700',
     color:'#FF7000',
     marginTop:10,
+    zIndex:150,
     
-  }
+  },
+  backgroundImage: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+    backgroundColor: "white",
+    alignSelf: "center",
+    zIndex: 60,
+    opacity: 0.2,
+  },
   
 });
