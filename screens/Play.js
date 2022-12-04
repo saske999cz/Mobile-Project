@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
-    zIndex: 150,
+    zIndex: 100,
     position: "absolute",
     top: 255,
   },
