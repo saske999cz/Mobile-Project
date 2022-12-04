@@ -28,12 +28,11 @@ export default function Login(props) {
       setIsLoading(true);
       signInWithEmailAndPassword(auth, email, password)
         .then((res) => {
-          Alert.alert("Login success");
+          Alert.alert("Đăng nhập thành công");
           dispatch(
             login({
               user: {
                 email: res.user.email,
-                phoneNumber: res.user.phoneNumber,
                 photoURL: res.user.photoURL,
                 displayName: res.user.displayName,
               },
