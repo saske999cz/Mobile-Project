@@ -45,7 +45,7 @@ export default function Signup({ navigation }) {
         <Text style={styles.title}>LET'S CREATE NEW ONE</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter your email here..."
+          placeholder="Nhập email..."
           autoCapitalize="none"
           keyboardType="email-address"
           textContentType="emailAddress"
@@ -54,7 +54,7 @@ export default function Signup({ navigation }) {
         />
         <TextInput
           style={styles.input}
-          placeholder="Enter your password here..."
+          placeholder="Nhập mật khẩu..."
           autoCapitalize="none"
           autoCorrect={false}
           secureTextEntry={true}

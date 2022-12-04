@@ -8,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import LoadingCircular from "../components/common/Loading";
@@ -15,6 +16,8 @@ import { auth } from "../config/firebase";
 import { ROUTER } from "../constants/route";
 import { logout } from "../store/userStore";
 import { go } from "../utils/common";
+import homeBg from "../assets/homeBg.png";
+
 export default function Home(props) {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useSelector((rootState) => rootState.user);
@@ -24,7 +27,7 @@ export default function Home(props) {
     return signOut(auth)
       .then(() => {
         go(props.navigation, ROUTER.LOGIN);
-        Alert.alert("LOG OUT SUCCESSFULLY");
+        Alert.alert("ĐĂNG XUẤT THÀNH CÔNG");
         setIsLoading(false);
         dispatch(logout());
       })
@@ -47,7 +50,7 @@ export default function Home(props) {
       {isLoading && <LoadingCircular visible={isLoading} />}
       <View style={styles.whiteSheet} />
       <SafeAreaView style={styles.form}>
-        <Text style={styles.title}>WELCOME TO MY GAME</Text>
+        <Image source={homeBg} style={styles.MainIMG} />
 
         <TouchableOpacity
           style={styles.button}
@@ -59,17 +62,12 @@ export default function Home(props) {
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => {}}>
           <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
-            Gét Go
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => {}}>
-          <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
             Bảng Điểm
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={handleSignOut}>
           <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
-            Log Out
+            Đăng xuất
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
@@ -86,7 +84,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 36,
     fontWeight: "bold",
-    color: "orange",
+    color: "midnightblue",
     alignSelf: "center",
     paddingBottom: 24,
   },

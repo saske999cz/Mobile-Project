@@ -66,7 +66,7 @@ export default function Play({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "orange",
+    backgroundColor: "midnightblue",
     paddingBottom: 50,
   },
   questionContainer: {
