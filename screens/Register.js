@@ -42,7 +42,7 @@ export default function Signup({ navigation }) {
       {isLoading && <LoadingCircular visible={isLoading} />}
       <View style={styles.whiteSheet} />
       <SafeAreaView style={styles.form}>
-        <Text style={styles.title}>LET'S CREATE NEW ONE</Text>
+        <Text style={styles.title}>TẠO TÀI KHOẢN</Text>
         <TextInput
           style={styles.input}
           placeholder="Nhập email..."
@@ -65,7 +65,7 @@ export default function Signup({ navigation }) {
         <TouchableOpacity style={styles.button} onPress={onHandleSignup}>
           <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
             {" "}
-            Sign Up
+            ĐĂNG KÝ
           </Text>
         </TouchableOpacity>
         <View
@@ -80,9 +80,9 @@ export default function Signup({ navigation }) {
             Don't have an account?{" "}
           </Text>
           <TouchableOpacity onPress={() => go(navigation, ROUTER.LOGIN)}>
-            <Text style={{ color: "#f57c00", fontWeight: "600", fontSize: 14 }}>
+            <Text style={{ color: "slateblue", fontWeight: "600", fontSize: 14 }}>
               {" "}
-              Log In
+              Đăng nhập
             </Text>
           </TouchableOpacity>
         </View>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 36,
     fontWeight: "bold",
-    color: "orange",
+    color: "slateblue",
     alignSelf: "center",
     paddingBottom: 24,
     textAlign: "center",
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
   },
   button: {
-    backgroundColor: "#f57c00",
+    backgroundColor: "slateblue",
     height: 58,
     borderRadius: 10,
     justifyContent: "center",
