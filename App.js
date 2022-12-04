@@ -7,6 +7,7 @@ import Login from "./screens/Login";
 import Play from "./screens/Play";
 import Register from "./screens/Register";
 import UpdateInfo from "./screens/UpdateInfo";
+import Score from "./screens/Score";
 import { rootStore } from "./store/store";
 
 const Stack = createNativeStackNavigator();
@@ -18,6 +19,7 @@ export default function App() {
         <Stack.Navigator>
           <Stack.Screen name={ROUTER.LOGIN} component={Login} />
           <Stack.Screen name={ROUTER.HOME} component={Home} />
+          <Stack.Screen name={ROUTER.SCORE} component={Score} />
           <Stack.Screen name={ROUTER.REGISTER} component={Register} />
           <Stack.Screen name={ROUTER.UPDATE_INFO} component={UpdateInfo} />
           <Stack.Screen name={ROUTER.PLAY} component={Play} />

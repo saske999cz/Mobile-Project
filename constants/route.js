@@ -4,4 +4,5 @@ export const ROUTER = {
   REGISTER: "REGISTER",
   UPDATE_INFO: "UPDATE_INFO",
   PLAY: "PLAY",
+  SCORE: "SCORE",
 };

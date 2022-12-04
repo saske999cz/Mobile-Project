@@ -41,11 +41,11 @@ export default function Play({ navigation }) {
 
   const handleClick = (item) => {
     if (item.isCorrect) {
-      Alert.alert("Good")
+     
       // setIsCorrect(true)
     } else {
       Alert.alert("Next time..")
-      // setIsCorrect(false)
+     //setIsCorrect(false)
     }
   }
 
@@ -145,7 +145,6 @@ export default function Play({ navigation }) {
               <ButtonAnswer
                 textMain={item?.answer}
                 textIndex={answerIndex(index + 1)}
-                // style={{backgroundColor: isCorrect ? 'green' : ''}}
                 onPress={() => {handleClick(item)}}
               />
             </View>
@@ -154,7 +153,7 @@ export default function Play({ navigation }) {
     </View>
   );
 }
-const styles = StyleSheet.create({
+ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "midnightblue",
@@ -216,6 +215,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     flexWrap: "wrap",
     zIndex: 70,
+    
   },
   whiteSheet: {
     width: "100%",
