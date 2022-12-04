@@ -17,6 +17,7 @@ import { ROUTER } from "../constants/route";
 import { logout } from "../store/userStore";
 import { go } from "../utils/common";
 import homeBg from "../assets/homeBg.png";
+import Button from "../components/common/Button";
 
 export default function Home(props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -65,11 +66,7 @@ export default function Home(props) {
             Bảng Điểm
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={handleSignOut}>
-          <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
-            Đăng xuất
-          </Text>
-        </TouchableOpacity>
+        <Button onPress={handleSignOut} text="Đăng Xuất"></Button>
       </SafeAreaView>
       <StatusBar barStyle="light-content" />
     </View>
@@ -82,8 +79,7 @@ const styles = StyleSheet.create({
     backgroundColor: "slateblue",
   },
   MainIMG: {
-    alignSelf: 'center',
-    
+    alignSelf: "center",
   },
   title: {
     fontSize: 36,
@@ -127,6 +123,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 40,
-    
   },
 });
