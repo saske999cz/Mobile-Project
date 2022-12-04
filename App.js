@@ -16,8 +16,8 @@ export default function App() {
     <Provider store={rootStore}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name={ROUTER.HOME} component={Home} />
           <Stack.Screen name={ROUTER.LOGIN} component={Login} />
+          <Stack.Screen name={ROUTER.HOME} component={Home} />
           <Stack.Screen name={ROUTER.REGISTER} component={Register} />
           <Stack.Screen name={ROUTER.UPDATE_INFO} component={UpdateInfo} />
           <Stack.Screen name={ROUTER.PLAY} component={Play} />
