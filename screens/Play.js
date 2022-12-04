@@ -4,6 +4,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { Dimensions } from "react-native";
 import LoadingCircular from "../components/common/Loading";
+import ButtonAnswer from "../components/common/ButtonAnswer";
 export default function Play({ navigation }) {
   const [listAnswer, setListAnswer] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,16 +49,9 @@ export default function Play({ navigation }) {
           listAnswer.length > 0 &&
           listAnswer[0]?.answer &&
           listAnswer[0]?.answer.map((item, index) => (
-            <TouchableOpacity key={index} style={styles.answerBtn}>
-              <Text
-                style={{
-                  color: "white",
-                  fontWeight: "500",
-                }}
-              >
-                {item}
-              </Text>
-            </TouchableOpacity>
+            <View style={styles.answerBtn}>
+              <ButtonAnswer textMain={item} textIndex={index + 1} key={index} />
+            </View>
           ))}
       </View>
     </View>
@@ -84,7 +78,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "stretch",
-    flexDirection: "column",
+    flexDirection: "row",
     flexWrap: "wrap",
   },
   whiteSheet: {
@@ -96,12 +90,10 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 60,
   },
   answerBtn: {
-    backgroundColor: "midnightblue",
     height: 58,
-    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    width: Dimensions.get("window").width - 20,
-    margin: 10,
+    width: Dimensions.get("window").width / 2 - 10,
+    margin: 5,
   },
 });
