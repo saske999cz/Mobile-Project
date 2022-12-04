@@ -14,11 +14,23 @@ import LoadingCircular from "../components/common/Loading";
 import SideBar from "../components/common/SideBar";
 import { db } from "../config/firebase";
 import imagePlayScreenBg from "../assets/haha.jpg";
+import { useTimer } from "../hooks/count-down";
 
 export default function Play({ navigation }) {
   const [listAnswer, setListAnswer] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
+  const [isStartCount, setIsStartCount] = useState(true);
+
+  const timeLeft = useTimer(isStartCount);
+  useEffect(() => {
+    if (+timeLeft === 0) {
+      setIsStartCount(false);
+    }
+  }, [timeLeft]);
+
+  console.log({ timeLeft, isStartCount });
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -38,10 +50,10 @@ export default function Play({ navigation }) {
     fetchData();
   }, []);
 
-  console.log(listAnswer);
-
   return (
     <View style={styles.container}>
+      {isLoading && <LoadingCircular visible={isLoading} />}
+
       <Image source={imagePlayScreenBg} style={styles.backgroundImage} />
 
       {isOpenMenu && (
@@ -51,6 +63,8 @@ export default function Play({ navigation }) {
           </View>
         </SideBar>
       )}
+
+      {/* icon menu  */}
       <TouchableOpacity
         onPress={() => setIsOpenMenu((prev) => !prev)}
         style={{ position: "absolute", top: 15, right: 10, zIndex: 100 }}
@@ -66,12 +80,52 @@ export default function Play({ navigation }) {
         </View>
       </TouchableOpacity>
 
+      {/* main view */}
       <View style={styles.whiteSheet} />
+
+      {/* question */}
       <View style={styles.questionContainer}>
         <Text style={styles.question}>{listAnswer[0]?.question || ""}</Text>
       </View>
-      {isLoading && <LoadingCircular visible={isLoading} />}
 
+      {/* countdown */}
+      <View>
+        {isStartCount ? (
+          <View style={styles.textTimeLeftContainer}>
+            <View
+              style={{
+                display: "flex",
+
+                flexDirection: "col",
+              }}
+            >
+              <Text style={styles.textTimeLeft}>
+                Thời gian trả lời còn lại :
+              </Text>
+
+              <Text
+                style={{
+                  color: +timeLeft > 5 ? "white" : "red",
+                  fontSize: 40,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  marginTop: 5,
+                }}
+              >
+                {timeLeft}s
+              </Text>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.textTimeLeftContainer}>
+            <Text style={styles.textTimeLeft}>
+              Thời gian trả lời của bạn đã hết.
+            </Text>
+          </View>
+        )}
+      </View>
+
+      {/* list answers */}
       <View style={styles.answerContainer}>
         {listAnswer &&
           listAnswer.length > 0 &&
@@ -102,6 +156,20 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     zIndex: 60,
     opacity: 0.2,
+  },
+  textTimeLeftContainer: {
+    marginTop: 20,
+    padding: 20,
+    textAlign: "center",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textTimeLeft: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 20,
   },
   questionContainer: {
     marginTop: 100,
