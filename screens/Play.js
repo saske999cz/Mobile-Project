@@ -26,6 +26,9 @@ const defaultItemAnswer = {
   color: "",
   type: "",
 };
+import help1 from "../assets/help1.png";
+import help2 from "../assets/help2.png";
+import help3 from "../assets/help3.png";
 
 export default function Play({ navigation }) {
   const [count, setCount] = useState(60);
@@ -212,6 +215,18 @@ export default function Play({ navigation }) {
         <Text style={styles.question}>{currentQuestion?.question || ""}</Text>
       </View>
 
+      <View style={styles.helpcontainer}>
+        <TouchableOpacity>
+          <Image source={help1} style={styles.HelpIMG} />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Image source={help2} style={styles.HelpIMGv1} />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Image source={help3} style={styles.HelpIMGv2} />
+        </TouchableOpacity>
+      </View>
+
       {/* countdown */}
       <View style={styles.clock}>
         {isStartCount ? (
@@ -359,5 +374,28 @@ const styles = StyleSheet.create({
     zIndex: 110,
     marginTop: 8,
     marginLeft: 10,
+  },
+
+  helpcontainer: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+    zIndex: 150,
+    position: "absolute",
+    top: 255,
+  },
+
+  HelpIMG: {
+    height: 120,
+    width: 120,
+    marginLeft: 7,
+  },
+  HelpIMGv1: {
+    height: 130,
+    width: 130,
+  },
+  HelpIMGv2: {
+    height: 135,
+    width: 135,
   },
 });
