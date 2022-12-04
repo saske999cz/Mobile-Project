@@ -1,13 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SimpleLineIcons } from "@expo/vector-icons";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../config/firebase";
-import { Dimensions } from "react-native";
-import LoadingCircular from "../components/common/Loading";
+import { useEffect, useState } from "react";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import ButtonAnswer from "../components/common/ButtonAnswer";
+import LoadingCircular from "../components/common/Loading";
+import SideBar from "../components/common/SideBar";
+import { db } from "../config/firebase";
+import imagePlayScreenBg from "../assets/haha.jpg";
+
 export default function Play({ navigation }) {
   const [listAnswer, setListAnswer] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -27,30 +38,47 @@ export default function Play({ navigation }) {
     fetchData();
   }, []);
 
+  console.log(listAnswer);
+
   return (
     <View style={styles.container}>
-      {isLoading && <LoadingCircular visible={isLoading} />}
-      <View style={styles.whiteSheet} />
-      <View style={styles.questionContainer}>
-        <Text
+      <Image source={imagePlayScreenBg} style={styles.backgroundImage} />
+
+      {isOpenMenu && (
+        <SideBar>
+          <View style={{ flex: 1, backgroundColor: "white" }}>
+            <Text>hehe</Text>
+          </View>
+        </SideBar>
+      )}
+      <TouchableOpacity
+        onPress={() => setIsOpenMenu((prev) => !prev)}
+        style={{ position: "absolute", top: 15, right: 10, zIndex: 100 }}
+      >
+        <View
           style={{
-            textAlign: "center",
-            marginBottom: 10,
-            color: "white",
-            fontWeight: "500",
+            backgroundColor: "white",
+            padding: 8,
+            borderRadius: "50%",
           }}
         >
-          Câu hỏi 1
-        </Text>
+          <SimpleLineIcons name="menu" size={18} color="midnightblue" />
+        </View>
+      </TouchableOpacity>
+
+      <View style={styles.whiteSheet} />
+      <View style={styles.questionContainer}>
         <Text style={styles.question}>{listAnswer[0]?.question || ""}</Text>
       </View>
+      {isLoading && <LoadingCircular visible={isLoading} />}
+
       <View style={styles.answerContainer}>
         {listAnswer &&
           listAnswer.length > 0 &&
-          listAnswer[0]?.answer &&
-          listAnswer[0]?.answer.map((item, index) => (
-            <View style={styles.answerBtn}>
-              <ButtonAnswer textMain={item} textIndex={index + 1} key={index} />
+          listAnswer[0]?.answers &&
+          listAnswer[0]?.answers?.map((item, index) => (
+            <View style={styles.answerBtn} key={index}>
+              <ButtonAnswer textMain={item?.answer} textIndex={index + 1} />
             </View>
           ))}
       </View>
@@ -61,25 +89,51 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "midnightblue",
-    paddingBottom: 50,
+    position: "relative",
+  },
+  backgroundImage: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+    backgroundColor: "white",
+    alignSelf: "center",
+    zIndex: 60,
+    opacity: 0.2,
   },
   questionContainer: {
     marginTop: 100,
+    padding: 20,
+    backgroundColor: "black",
+    zIndex: 100,
+    borderWidth: 4,
+    borderColor: "#74a2d5",
+    borderTopRightRadius: 30,
+    borderBottomLeftRadius: 30,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   question: {
-    fontSize: 36,
+    display: "block",
+    fontSize: 28,
     fontWeight: "bold",
     color: "white",
     alignSelf: "center",
     paddingBottom: 24,
+    textAlign: "center",
   },
   answerContainer: {
+    paddingBottom: 50,
     marginTop: "auto",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "stretch",
     flexDirection: "row",
     flexWrap: "wrap",
+    zIndex: 70,
   },
   whiteSheet: {
     width: "100%",
@@ -88,6 +142,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: "slateblue",
     borderTopLeftRadius: 60,
+    opacity: 0.5,
   },
   answerBtn: {
     height: 58,
