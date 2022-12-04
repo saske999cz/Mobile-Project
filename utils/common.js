@@ -1,5 +1,6 @@
 import { auth } from "../config/firebase";
-
+import 'intl';
+import 'intl/locale-data/jsonp/en'; // or any other locale you need
 const convertNumber = (value) => {
   return +value;
 };

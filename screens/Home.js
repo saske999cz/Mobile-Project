@@ -61,7 +61,7 @@ export default function Home(props) {
             Chơi
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => {}}>
+        <TouchableOpacity style={styles.button} onPress={() => go(props.navigation, ROUTER.SCORE)}>
           <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
             Bảng Điểm
           </Text>

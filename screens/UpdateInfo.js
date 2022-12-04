@@ -47,24 +47,14 @@ export default function UpdateInfo({ navigation }) {
         <Text style={styles.title}>ENTER YOUR INFORMATION</Text>
         <TextInput
           style={styles.input}
-          placeholder="Bin Chilling..."
+          placeholder="Nhập tên..."
           autoCapitalize="none"
           keyboardType="email-address"
           textContentType="emailAddress"
           value={name}
           onChangeText={(text) => setName(text)}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="090xxxxx73"
-          autoCapitalize="none"
-          autoCorrect={false}
-          secureTextEntry={true}
-          textContentType="text"
-          value={phoneNumber}
-          maxLength={11}
-          onChangeText={(text) => setPhoneNumber(text)}
-        />
+      
         <TouchableOpacity style={styles.button} onPress={onHandleUpdateInfo}>
           <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
             {" "}
