@@ -3,8 +3,11 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 function ButtonAnswer(props) {
   return (
-    <TouchableOpacity style={styles.buttonAnswer} onPress={props.onPress}>
-      <View style={[styles.container, props.style]}>
+    <TouchableOpacity
+      style={[styles.buttonAnswer, props.style]}
+      onPress={props.onPress}
+    >
+      <View style={styles.container}>
         <Text style={styles.textIndex}>{props.textIndex}:</Text>
         <Text style={styles.textMain}>{props.textMain}</Text>
       </View>
@@ -25,7 +28,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 30,
     justifyContent: "center",
-    paddingLeft:30,
+    paddingLeft: 30,
   },
   container: {
     display: "flex",

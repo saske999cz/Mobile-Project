@@ -1,5 +1,5 @@
 import { SimpleLineIcons } from "@expo/vector-icons";
-import { collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -10,27 +10,45 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import imagePlayScreenBg from "../assets/haha.jpg";
 import ButtonAnswer from "../components/common/ButtonAnswer";
 import LoadingCircular from "../components/common/Loading";
 import SideBar from "../components/common/SideBar";
-import { db } from "../config/firebase";
-import imagePlayScreenBg from "../assets/haha.jpg";
-import { useTimer } from "../hooks/count-down";
 import PlaySidebarContent from "../components/molecules/PlaySidebarContent";
+import { db } from "../config/firebase";
+import { moneyByNumberQuestion } from "../constants/data";
+import { ROUTER } from "../constants/route";
+import { go, randomQuestion, formatVND } from "../utils/common";
+import { useSelector } from "react-redux";
+
+const defaultItemAnswer = {
+  index: -1,
+  color: "",
+  type: "",
+};
 
 export default function Play({ navigation }) {
-  const [listAnswer, setListAnswer] = useState([]);
+  const [count, setCount] = useState(60);
+  const { user } = useSelector((rootState) => rootState.user);
+  const [currentItemAnswer, setCurrentItemAnswer] = useState(defaultItemAnswer);
+  const [currentQuestion, setCurrentQuestion] = useState({});
+  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [isStartCount, setIsStartCount] = useState(true);
-  const [isCorrect, setIsCorrect] = useState(false);
+  const [score, setScore] = useState({
+    level: 1,
+    number: 1,
+  });
 
-  const timeLeft = useTimer(isStartCount);
   useEffect(() => {
-    if (+timeLeft === 0) {
-      setIsStartCount(false);
+    if (isStartCount) {
+      const secondsLeft = setInterval(() => {
+        setCount((c) => c - 1);
+      }, 1000);
+      return () => clearInterval(secondsLeft);
     }
-  }, [timeLeft]);
+  }, [isStartCount]);
 
   function answerIndex(index) {
     if (index == 1) return "A";
@@ -39,15 +57,103 @@ export default function Play({ navigation }) {
     if (index == 4) return "D";
   }
 
-  const handleClick = (item) => {
-    if (item.isCorrect) {
-     
-      // setIsCorrect(true)
-    } else {
-      Alert.alert("Next time..")
-     //setIsCorrect(false)
+  const onHandleGameProcess = async (type) => {
+    try {
+      setIsStartCount(false);
+      await addDoc(collection(db, "scores"), {
+        email: user?.email || "",
+        money: getMoneyByNumberQuestion(score.number),
+        numberQuestion: score.number,
+      });
+
+      if (type === "win") {
+        Alert.alert(
+          type === "win" ? "Chúc mừng bạnn" : "Bạn thua rùiii",
+          type === "win"
+            ? `Bạn đã kết thúc lượt chơi của mình với tất cả các câu hỏi , số tiền thưởng bạn đạt được ${formatVND(
+                getMoneyByNumberQuestion(score.number)
+              )} cho lần chơi này. Congratulations`
+            : `Bạn đã kết thúc lượt chơi của mình tại câu hỏi số ${
+                score.number
+              }, và số tiền thưởng bạn đạt được là ${formatVND(
+                getMoneyByNumberQuestion(score.number)
+              )} , chúc bạn may mắn trong lượt chơi kế tiếp.`,
+
+          [
+            {
+              text: "Okê",
+              onPress: () => go(navigation, ROUTER.HOME),
+            },
+          ],
+          { cancelable: false }
+          //clicking out side of alert will not cancel
+        );
+      }
+      setTimeout(() => go(navigation, ROUTER.HOME), 4000);
+    } catch (error) {
+      console.log({ error });
     }
-  }
+  };
+
+  const getLevel = (index) => {
+    if (index >= 1 && index <= 4) return 1;
+    if (index >= 5 && index <= 9) return 2;
+    if (index >= 10 && index <= 14) return 3;
+    if (index === 15) return 4;
+    return 1;
+  };
+
+  const getMoneyByNumberQuestion = (questionNumber) => {
+    if (questionNumber >= 1) {
+      return moneyByNumberQuestion.find((item) => item.index === questionNumber)
+        .money;
+    }
+    return 0;
+  };
+  const handleAnswerQuestion = (item, index, level) => {
+    if (item.isCorrect) {
+      if (score.number === 14) return onHandleGameProcess("win");
+
+      setCurrentItemAnswer({
+        index,
+        color: "green",
+        type: "success",
+      });
+      setIsStartCount(false);
+
+      setTimeout(() => {
+        setScore((prev) => ({
+          ...prev,
+          level: level,
+          number: prev.number + 1,
+        }));
+        const filterData = data.filter((currentItem) => {
+          return currentItem.id !== currentQuestion.id;
+        });
+        setData(filterData);
+        setCurrentItemAnswer(defaultItemAnswer);
+        setCount(60);
+        setIsStartCount(true);
+      }, 1500);
+    } else {
+      setCurrentItemAnswer({
+        index,
+        color: "red",
+        type: "error",
+      });
+      onHandleGameProcess("lose");
+    }
+  };
+
+  useEffect(() => {
+    if (count === 0) onHandleGameProcess("lose");
+  }, [count]);
+
+  useEffect(() => {
+    if (!data || data.length === 0) return;
+    const randomItem = randomQuestion(data, getLevel(score.number));
+    setCurrentQuestion(randomItem);
+  }, [data]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,8 +162,10 @@ export default function Play({ navigation }) {
         const querySnapshot = await getDocs(collection(db, "questions"));
         if (querySnapshot) {
           const result = [];
-          querySnapshot.forEach((doc) => result.push(doc.data()));
-          setListAnswer(result);
+          querySnapshot.forEach((doc) => {
+            result.push({ id: doc.id, ...doc.data() });
+          });
+          setData(result);
         }
       } catch (e) {
         console.error("Error adding document: ", e);
@@ -76,7 +184,7 @@ export default function Play({ navigation }) {
 
       {isOpenMenu && (
         <SideBar>
-          <PlaySidebarContent />
+          <PlaySidebarContent currentQuestion={score.number} />
         </SideBar>
       )}
 
@@ -101,7 +209,7 @@ export default function Play({ navigation }) {
 
       {/* question */}
       <View style={styles.questionContainer}>
-        <Text style={styles.question}>{listAnswer[0]?.question || ""}</Text>
+        <Text style={styles.question}>{currentQuestion?.question || ""}</Text>
       </View>
 
       {/* countdown */}
@@ -117,14 +225,14 @@ export default function Play({ navigation }) {
             >
               <Text
                 style={{
-                  color: +timeLeft > 5 ? "white" : "orange",
+                  color: count > 5 ? "white" : "orange",
                   fontSize: 20,
                   fontWeight: "bold",
                   textAlign: "center",
                   marginTop: 3,
                 }}
               >
-                {timeLeft}s
+                {count}s
               </Text>
             </View>
           </View>
@@ -137,15 +245,23 @@ export default function Play({ navigation }) {
 
       {/* list answers */}
       <View style={styles.answerContainer}>
-        {listAnswer &&
-          listAnswer.length > 0 &&
-          listAnswer[0]?.answers &&
-          listAnswer[0]?.answers?.map((item, index) => (
+        {currentQuestion &&
+          currentQuestion?.answers?.length > 0 &&
+          currentQuestion?.answers &&
+          currentQuestion?.answers?.map((item, index) => (
             <View style={styles.answerBtn} key={index}>
               <ButtonAnswer
                 textMain={item?.answer}
                 textIndex={answerIndex(index + 1)}
-                onPress={() => {handleClick(item)}}
+                style={{
+                  backgroundColor:
+                    currentItemAnswer.index === index
+                      ? currentItemAnswer.color
+                      : "black",
+                }}
+                onPress={() => {
+                  handleAnswerQuestion(item, index, getLevel(score.number));
+                }}
               />
             </View>
           ))}
@@ -153,7 +269,7 @@ export default function Play({ navigation }) {
     </View>
   );
 }
- const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "midnightblue",
@@ -215,7 +331,6 @@ export default function Play({ navigation }) {
     flexDirection: "column",
     flexWrap: "wrap",
     zIndex: 70,
-    
   },
   whiteSheet: {
     width: "100%",

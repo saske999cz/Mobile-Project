@@ -16,4 +16,12 @@ const formatVND = (money) => {
   }).format(money);
 };
 
-export { convertNumber, go, formatVND };
+const randomQuestion = (listData = [], level) => {
+  if (!listData || listData.length === 0) return {};
+  const listQuestionSameLevel =
+    listData && listData?.filter((item) => +item.level === +level);
+  const randomIndex = Math.floor(Math.random() * listQuestionSameLevel.length);
+  return listQuestionSameLevel[randomIndex];
+};
+
+export { convertNumber, go, formatVND, randomQuestion };
