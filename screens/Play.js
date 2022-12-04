@@ -15,6 +15,7 @@ import SideBar from "../components/common/SideBar";
 import { db } from "../config/firebase";
 import imagePlayScreenBg from "../assets/haha.jpg";
 import { useTimer } from "../hooks/count-down";
+import PlaySidebarContent from "../components/molecules/PlaySidebarContent";
 
 export default function Play({ navigation }) {
   const [listAnswer, setListAnswer] = useState([]);
@@ -31,16 +32,12 @@ export default function Play({ navigation }) {
 
   console.log({ timeLeft, isStartCount });
 
- function answerIndex(index){
-    if(index == 1)
-    return "A";
-    if(index == 2)
-    return "B";
-    if (index == 3)
-    return "C";
-    if (index == 4)
-    return "D";
- }
+  function answerIndex(index) {
+    if (index == 1) return "A";
+    if (index == 2) return "B";
+    if (index == 3) return "C";
+    if (index == 4) return "D";
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,9 +66,7 @@ export default function Play({ navigation }) {
 
       {isOpenMenu && (
         <SideBar>
-          <View style={{ flex: 1, backgroundColor: "white" }}>
-            <Text>hehe</Text>
-          </View>
+          <PlaySidebarContent />
         </SideBar>
       )}
 
@@ -110,15 +105,13 @@ export default function Play({ navigation }) {
                 flexDirection: "column",
               }}
             >
-              
-
               <Text
                 style={{
                   color: +timeLeft > 5 ? "white" : "orange",
                   fontSize: 20,
                   fontWeight: "bold",
                   textAlign: "center",
-                  marginTop:3
+                  marginTop: 3,
                 }}
               >
                 {timeLeft}s
@@ -127,9 +120,7 @@ export default function Play({ navigation }) {
           </View>
         ) : (
           <View style={styles.textTimeLeftContainer}>
-            <Text style={styles.textTimeLeft}>
-              Hết giờ
-            </Text>
+            <Text style={styles.textTimeLeft}>Hết giờ</Text>
           </View>
         )}
       </View>
@@ -141,7 +132,10 @@ export default function Play({ navigation }) {
           listAnswer[0]?.answers &&
           listAnswer[0]?.answers?.map((item, index) => (
             <View style={styles.answerBtn} key={index}>
-              <ButtonAnswer textMain={item?.answer} textIndex={answerIndex(index+1)}/>
+              <ButtonAnswer
+                textMain={item?.answer}
+                textIndex={answerIndex(index + 1)}
+              />
             </View>
           ))}
       </View>
@@ -167,7 +161,6 @@ const styles = StyleSheet.create({
     opacity: 0.2,
   },
   textTimeLeftContainer: {
-    
     padding: 20,
     textAlign: "center",
     display: "flex",
@@ -225,19 +218,19 @@ const styles = StyleSheet.create({
     height: 58,
     justifyContent: "center",
     alignItems: "center",
-    width: Dimensions.get("window").width  - 20,
+    width: Dimensions.get("window").width - 20,
     margin: 5,
   },
-  clock:{
-    position:"absolute",
-    backgroundColor:"black",
-    borderWidth:3,
-    borderRadius:100,
-    borderColor:'#74a2d5',
-    width:80,
-    height:80,
-    zIndex:110,
-    marginTop:8,
-    marginLeft:10,
-  }
+  clock: {
+    position: "absolute",
+    backgroundColor: "black",
+    borderWidth: 3,
+    borderRadius: 100,
+    borderColor: "#74a2d5",
+    width: 80,
+    height: 80,
+    zIndex: 110,
+    marginTop: 8,
+    marginLeft: 10,
+  },
 });

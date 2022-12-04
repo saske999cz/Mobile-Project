@@ -9,7 +9,7 @@ let styles = StyleSheet.create({
     width: "75%",
     height: "100%",
     flex: 1,
-    zIndex: 100,
+    zIndex: 150,
     opacity: 0.9,
   },
 });
@@ -21,11 +21,11 @@ export default Sidebar = (props) => {
   useEffect(() => {
     Animated.timing(leftAnim, {
       toValue: 0,
-      duration: 1000,
+      duration: 600,
     }).start();
     Animated.timing(opacityAnim, {
       toValue: 1,
-      duration: 1000,
+      duration: 600,
     }).start();
   }, [leftAnim]);
 
