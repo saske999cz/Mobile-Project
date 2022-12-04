@@ -2,6 +2,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
+  Alert,
   Dimensions,
   Image,
   StyleSheet,
@@ -22,6 +23,7 @@ export default function Play({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [isStartCount, setIsStartCount] = useState(true);
+  const [isCorrect, setIsCorrect] = useState(false);
 
   const timeLeft = useTimer(isStartCount);
   useEffect(() => {
@@ -30,13 +32,21 @@ export default function Play({ navigation }) {
     }
   }, [timeLeft]);
 
-  console.log({ timeLeft, isStartCount });
-
   function answerIndex(index) {
     if (index == 1) return "A";
     if (index == 2) return "B";
     if (index == 3) return "C";
     if (index == 4) return "D";
+  }
+
+  const handleClick = (item) => {
+    if (item.isCorrect) {
+      Alert.alert("Good")
+      // setIsCorrect(true)
+    } else {
+      Alert.alert("Next time..")
+      // setIsCorrect(false)
+    }
   }
 
   useEffect(() => {
@@ -135,6 +145,8 @@ export default function Play({ navigation }) {
               <ButtonAnswer
                 textMain={item?.answer}
                 textIndex={answerIndex(index + 1)}
+                // style={{backgroundColor: isCorrect ? 'green' : ''}}
+                onPress={() => {handleClick(item)}}
               />
             </View>
           ))}

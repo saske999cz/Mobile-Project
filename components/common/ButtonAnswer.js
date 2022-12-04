@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 function ButtonAnswer(props) {
   return (
     <TouchableOpacity style={styles.buttonAnswer} onPress={props.onPress}>
-      <View style={styles.container}>
+      <View style={[styles.container, props.style]}>
         <Text style={styles.textIndex}>{props.textIndex}:</Text>
         <Text style={styles.textMain}>{props.textMain}</Text>
       </View>
