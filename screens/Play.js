@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "stretch",
-    flexDirection: "row",
+    flexDirection: "column",
     flexWrap: "wrap",
   },
   whiteSheet: {
@@ -92,16 +92,16 @@ const styles = StyleSheet.create({
     height: "75%",
     position: "absolute",
     bottom: 0,
-    backgroundColor: "#fff",
+    backgroundColor: "slateblue",
     borderTopLeftRadius: 60,
   },
   answerBtn: {
-    backgroundColor: "#f57c00",
+    backgroundColor: "midnightblue",
     height: 58,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    width: Dimensions.get("window").width / 2 - 20,
+    width: Dimensions.get("window").width - 20,
     margin: 10,
   },
 });

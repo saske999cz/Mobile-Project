@@ -79,7 +79,11 @@ export default function Home(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "slateblue",
+  },
+  MainIMG: {
+    alignSelf: 'center',
+    
   },
   title: {
     fontSize: 36,
@@ -108,7 +112,7 @@ const styles = StyleSheet.create({
     height: "75%",
     position: "absolute",
     bottom: 0,
-    backgroundColor: "#fff",
+    backgroundColor: "slateblue",
     borderTopLeftRadius: 60,
   },
   form: {
@@ -117,11 +121,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
   },
   button: {
-    backgroundColor: "#f57c00",
+    backgroundColor: "midnightblue",
     height: 58,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     marginTop: 40,
+    
   },
 });
