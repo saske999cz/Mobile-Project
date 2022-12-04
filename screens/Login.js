@@ -42,7 +42,7 @@ export default function Login(props) {
           go(props.navigation, ROUTER.HOME);
         })
         .catch((err) => {
-          Alert.alert("Login error", err.message);
+          Alert.alert("Lỗi đăng nhập", err.message);
           setIsLoading(false);
         });
     }
@@ -58,10 +58,10 @@ export default function Login(props) {
       {isLoading && <LoadingCircular visible={isLoading} />}
       <View style={styles.whiteSheet} />
       <SafeAreaView style={styles.form}>
-        <Text style={styles.title}>LET'S SIGN IN TO BURN THE GAME</Text>
+        <Text style={styles.title}>HÃY ĐĂNG NHẬP ĐỂ BẮT ĐẦU CHƠI</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter your email here..."
+          placeholder="Nhập email..."
           autoCapitalize="none"
           keyboardType="email-address"
           textContentType="emailAddress"
@@ -71,7 +71,7 @@ export default function Login(props) {
         />
         <TextInput
           style={styles.input}
-          placeholder="Enter your password here..."
+          placeholder="Nhập mật khẩu..."
           autoCapitalize="none"
           autoCorrect={false}
           secureTextEntry={true}
@@ -81,7 +81,7 @@ export default function Login(props) {
         />
         <TouchableOpacity style={styles.button} onPress={onHandleLogin}>
           <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
-            SIGN IN
+            ĐĂNG NHẬP
           </Text>
         </TouchableOpacity>
         <View
@@ -93,14 +93,14 @@ export default function Login(props) {
           }}
         >
           <Text style={{ color: "gray", fontWeight: "600", fontSize: 14 }}>
-            Don't have an account?{" "}
+            Không có tài khoản?{" "}
           </Text>
           <TouchableOpacity
             onPress={() => go(props.navigation, ROUTER.REGISTER)}
           >
-            <Text style={{ color: "#f57c00", fontWeight: "600", fontSize: 14 }}>
+            <Text style={{ color: "slateblue", fontWeight: "600", fontSize: 14 }}>
               {" "}
-              Sign Up
+              Đăng ký
             </Text>
           </TouchableOpacity>
         </View>
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 36,
     fontWeight: "bold",
-    color: "orange",
+    color: "slateblue",
     alignSelf: "center",
     paddingBottom: 24,
   },
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
   },
   button: {
-    backgroundColor: "#f57c00",
+    backgroundColor: "slateblue",
     height: 58,
     borderRadius: 10,
     justifyContent: "center",
