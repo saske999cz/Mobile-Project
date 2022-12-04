@@ -2,6 +2,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
 import { formatVND } from "../../utils/common";
+import 'intl';
+import 'intl/locale-data/jsonp/en'; // or any other locale you need
 
 const data = [
   {
@@ -156,7 +158,7 @@ const styles = StyleSheet.create({
   row: {
     display: "flex",
     flexDirection: "row",
-    marginVertical: 4,
+    marginVertical: 2,
     alignItems: "center",
   },
 });
