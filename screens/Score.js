@@ -29,26 +29,27 @@ export default function Play({ navigation }) {
   const [isCorrect, setIsCorrect] = useState(false);
   const { user } = useSelector((rootState) => rootState.user);
   const [userBoard, setUserBoard] = useState({});
-  
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const q = query(collection(db, "scores"), where("email", "==", user.email));
+        const q = query(
+          collection(db, "scores"),
+          where("email", "==", user.email)
+        );
         const querySnapshot = await getDocs(q);
         if (querySnapshot) {
           const result = [];
           let count = 0;
-          let item ={};
+          let item = {};
           querySnapshot.forEach((doc) => {
-            if(doc.data().numberQuestion > count) {
-                count=doc.data().numberQuestion; 
-                item =doc.data()}});
+            if (doc.data().numberQuestion > count) {
+              count = doc.data().numberQuestion;
+              item = doc.data();
+            }
+          });
           setUserBoard(item);
-          console.log(item);
-          
-          
         }
       } catch (e) {
         console.error("Error adding document: ", e);
@@ -60,62 +61,57 @@ export default function Play({ navigation }) {
   }, []);
 
   return (
-    <View style ={styles.container}>
-    <Image source={haha} style={styles.backgroundImage} />
-        <Text style={styles.title}>
-            THỐNG KÊ
-        </Text>
-        <View style={styles.infocontainer}> 
+    <View style={styles.container}>
+      <Image source={haha} style={styles.backgroundImage} />
+      <Text style={styles.title}>THỐNG KÊ</Text>
+      <View style={styles.infocontainer}>
+        <Text style={styles.scoretext}>Tên: {user?.displayName}</Text>
+        <Text style={styles.scoretext}>Email: {user?.email}</Text>
         <Text style={styles.scoretext}>
-            Tên:  {user.email}
-        </Text>
-        <Text style={styles.scoretext}>
-            Số tiền nhiều nhất:  {formatVND(userBoard.money)} 
+          Số tiền nhiều nhất: {formatVND(userBoard?.money || 0)}
         </Text>
         <Text style={styles.scoretext}>
-            Số câu trả lời đúng:  {userBoard.numberQuestion}
+          {userBoard?.numberQuestion >= 0
+            ? ` Số câu trả lời đúng: ${userBoard?.numberQuestion}`
+            : "bạn chưa chơi lượt nào."}
         </Text>
-        </View>
-        
+      </View>
     </View>
-  )
-  }
- const styles = StyleSheet.create({
+  );
+}
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "slateblue",
-    alignItems:'center',
-    display:'flex',
-    
+    alignItems: "center",
+    display: "flex",
   },
-  infocontainer:{
+  infocontainer: {
     marginTop: 10,
     backgroundColor: "black",
-    alignItems:'flex-start',
-    display:'flex',
-    flexDirection:'column',
+    alignItems: "flex-start",
+    display: "flex",
+    flexDirection: "column",
     height: 600,
     width: Dimensions.get("window").width - 50,
-    borderRadius:40,
-    borderWidth:2,
-    borderColor:"#74a2d5",
-    zIndex:100,
+    borderRadius: 40,
+    borderWidth: 2,
+    borderColor: "#74a2d5",
+    zIndex: 100,
   },
   scoretext: {
-    fontSize:20,
-    fontWeight:'500',
-    color:'white',
-    marginTop:70,
-    marginLeft:20,
-    
+    fontSize: 20,
+    fontWeight: "500",
+    color: "white",
+    marginTop: 70,
+    marginLeft: 20,
   },
-title:{
-    fontSize:40,
-    fontWeight:'700',
-    color:'#FF7000',
-    marginTop:10,
-    zIndex:150,
-    
+  title: {
+    fontSize: 40,
+    fontWeight: "700",
+    color: "#FF7000",
+    marginTop: 10,
+    zIndex: 150,
   },
   backgroundImage: {
     position: "absolute",
@@ -129,5 +125,4 @@ title:{
     zIndex: 60,
     opacity: 0.2,
   },
-  
 });

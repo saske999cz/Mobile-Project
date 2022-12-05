@@ -44,7 +44,7 @@ export default function UpdateInfo({ navigation }) {
       {isLoading && <LoadingCircular visible={isLoading} />}
       <View style={styles.whiteSheet} />
       <SafeAreaView style={styles.form}>
-        <Text style={styles.title}>ENTER YOUR INFORMATION</Text>
+        <Text style={styles.title}>Nhập tên của bạn</Text>
         <TextInput
           style={styles.input}
           placeholder="Nhập tên..."
@@ -54,11 +54,10 @@ export default function UpdateInfo({ navigation }) {
           value={name}
           onChangeText={(text) => setName(text)}
         />
-      
+
         <TouchableOpacity style={styles.button} onPress={onHandleUpdateInfo}>
           <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
-            {" "}
-            CONFIRM
+            Xác Nhận
           </Text>
         </TouchableOpacity>
       </SafeAreaView>
@@ -74,7 +73,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 36,
     fontWeight: "bold",
-    color: "orange",
+    color: "slateblue",
     alignSelf: "center",
     paddingBottom: 24,
     textAlign: "center",
@@ -108,7 +107,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
   },
   button: {
-    backgroundColor: "#f57c00",
+    backgroundColor: "slateblue",
     height: 58,
     borderRadius: 10,
     justifyContent: "center",

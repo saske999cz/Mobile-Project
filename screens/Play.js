@@ -31,6 +31,16 @@ const defaultItemAnswer = {
   type: "",
 };
 
+const isDisabledButtonHalf = (list) => {
+  if (!list || list.length <= 0) return false;
+  let count = 0;
+  list.forEach((item) => {
+    if (count === 2) return;
+    item.isHide && count++;
+  });
+  return count === 2 ? true : false;
+};
+
 export default function Play({ navigation }) {
   const [count, setCount] = useState(60);
   const { user } = useSelector((rootState) => rootState.user);
@@ -44,7 +54,12 @@ export default function Play({ navigation }) {
     level: 1,
     number: 1,
   });
+  const [userHelp, setUserHelp] = useState({
+    half: false,
+    call: false,
+  });
 
+  const isDisabledButton = isDisabledButtonHalf(currentQuestion?.answers);
   function answerIndex(index) {
     if (index == 1) return "A";
     if (index == 2) return "B";
@@ -249,10 +264,34 @@ export default function Play({ navigation }) {
         <TouchableOpacity>
           <Image source={help1} style={styles.HelpIMG} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleGetHalfResult}>
+        <TouchableOpacity
+          onPress={() => {
+            setUserHelp((prev) => ({
+              ...prev,
+              half: true,
+            }));
+            handleGetHalfResult();
+          }}
+          disabled={userHelp.half}
+          style={{
+            opacity: userHelp.half ? 0.4 : 1,
+          }}
+        >
           <Image source={help2} style={styles.HelpIMGv1} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleCallTelephone}>
+        <TouchableOpacity
+          onPress={() => {
+            setUserHelp((prev) => ({
+              ...prev,
+              call: true,
+            }));
+            handleCallTelephone();
+          }}
+          disabled={userHelp.call}
+          style={{
+            opacity: userHelp.call ? 0.4 : 1,
+          }}
+        >
           <Image source={help3} style={styles.HelpIMGv2} />
         </TouchableOpacity>
       </View>
@@ -270,7 +309,7 @@ export default function Play({ navigation }) {
             >
               <Text
                 style={{
-                  color: count > 5 ? "white" : "orange",
+                  color: count > 5 ? "white" : "red",
                   fontSize: 20,
                   fontWeight: "bold",
                   textAlign: "center",
@@ -303,7 +342,7 @@ export default function Play({ navigation }) {
                     currentItemAnswer.index === index
                       ? currentItemAnswer.color
                       : "black",
-                  opacity: item?.isHide ? 0 : 1,
+                  display: item?.isHide ? "none" : "block",
                 }}
                 onPress={() => {
                   handleAnswerQuestion(item, index, getLevel(score.number));
