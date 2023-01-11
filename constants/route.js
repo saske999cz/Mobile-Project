@@ -1,0 +1,8 @@
+export const ROUTER = {
+  HOME: "HOME",
+  LOGIN: "LOGIN",
+  REGISTER: "REGISTER",
+  UPDATE_INFO: "UPDATE_INFO",
+  PLAY: "PLAY",
+  SCORE: "SCORE",
+};
