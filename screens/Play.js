@@ -342,7 +342,7 @@ export default function Play({ navigation }) {
                     currentItemAnswer.index === index
                       ? currentItemAnswer.color
                       : "black",
-                  display: item?.isHide ? "none" : "block",
+                  display: item?.isHide ? "none" : "flex",
                 }}
                 onPress={() => {
                   handleAnswerQuestion(item, index, getLevel(score.number));
